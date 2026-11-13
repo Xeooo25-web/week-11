@@ -1,1 +1,790 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RajutManis — Katalog Boneka Rajut Handmade</title>
+  <style>
+    /* Reset & Dasar */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    :root {
+      --bg-page: #fdf8f4;
+      --bg-card: #ffffff;
+      --bg-soft: #f6ebe3;
+      --text-main: #3b2d26;
+      --text-muted: #7a665c;
+      --accent-primary: #c96f50;
+      --accent-secondary: #759279;
+      --border-color: #eadbd0;
+      --shadow-soft: 0 6px 20px rgba(84, 57, 43, 0.06);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    .site-header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 18px 0;
+    }
+
+    .header-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-soft);
+      padding: 6px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+    }
+
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .header-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      background-color: var(--bg-soft);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Hero Banner */
+    .hero {
+      padding: 36px 0 16px;
+    }
+
+    .hero-box {
+      background: linear-gradient(135deg, #f8ece3 0%, #f1ded1 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .hero-content {
+      flex: 1 1 520px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent-primary);
+      background-color: rgba(255, 255, 255, 0.75);
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    .hero-content h2 {
+      font-size: 2rem;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .hero-content p {
+      color: var(--text-muted);
+      max-width: 600px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      min-width: 115px;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Section Heading */
+    .main-section {
+      padding: 36px 0 56px;
+    }
+
+    .section-heading {
+      margin-bottom: 26px;
+    }
+
+    .section-heading h2 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .section-heading p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Grid Katalog */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+      gap: 24px;
+    }
+
+    .product-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-visual {
+      position: relative;
+      height: 230px;
+      overflow: hidden;
+      border-bottom: 1px dashed var(--border-color);
+      background-color: var(--bg-soft);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .product-code {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 2;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background-color: rgba(255, 255, 255, 0.92);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .product-category {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent-secondary);
+      background-color: rgba(255, 255, 255, 0.92);
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid #d5e2d7;
+    }
+
+    .product-body {
+      padding: 18px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .product-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      flex-grow: 1;
+    }
+
+    .product-specs {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      font-size: 0.8rem;
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+    }
+
+    .spec-label {
+      color: var(--text-muted);
+    }
+
+    .spec-value {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .product-price {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .stock-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .stock-ready {
+      background-color: #eaf3ec;
+      color: #3f6a47;
+    }
+
+    .stock-limited {
+      background-color: #fdf0e6;
+      color: #b25c28;
+    }
+
+    /* Info Section */
+    .info-section {
+      background-color: var(--bg-soft);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 48px 0;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .info-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 22px;
+    }
+
+    .info-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .info-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    .site-footer {
+      background-color: var(--bg-card);
+      padding: 26px 0;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .footer-brand {
+      display: block;
+      color: var(--text-main);
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+
+    /* Responsif untuk layar kecil */
+    @media (max-width: 640px) {
+      .hero-box {
+        padding: 24px 20px;
+      }
+
+      .hero-content h2 {
+        font-size: 1.55rem;
+      }
+
+      .stat-item {
+        flex: 1 1 90px;
+        padding: 12px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Toko -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="44" height="44">
+            <circle cx="32" cy="32" r="26" fill="#E69A7E"/>
+            <path d="M12 24 C24 14, 44 18, 54 28" fill="none" stroke="#FFF8F3" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M10 34 C24 24, 46 28, 56 38" fill="none" stroke="#FFF8F3" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M14 44 C26 36, 42 38, 50 48" fill="none" stroke="#FFF8F3" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M22 10 C32 22, 28 42, 20 54" fill="none" stroke="#C96F50" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M36 8 C44 22, 40 42, 32 56" fill="none" stroke="#C96F50" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M52 46 Q60 52 54 58" fill="none" stroke="#C96F50" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">RajutManis</h1>
+          <p class="brand-subtitle">Katalog Resmi Boneka Rajut Handmade</p>
+        </div>
+      </div>
+
+      <div class="header-badges">
+        <span class="badge">100% Buatan Tangan</span>
+        <span class="badge">Benang Katun Susu</span>
+        <span class="badge">Ramah Anak</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner Utama -->
+  <section class="hero">
+    <div class="container hero-box">
+      <div class="hero-content">
+        <span class="hero-tag">KOLEKSI KATALOG TERBARU</span>
+        <h2>Kehangatan di Setiap Simpul Rajutan</h2>
+        <p>
+          Selamat datang di etalase digital RajutManis. Setiap boneka amigurumi dirajut satu per satu
+          dengan penuh ketelitian menggunakan benang katun susu pilihan yang lembut, empuk, dan tahan lama.
+        </p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number">18</span>
+          <span class="stat-label">Model Pilihan</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">5 Ply</span>
+          <span class="stat-label">Katun Lembut</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">Grade A</span>
+          <span class="stat-label">Isian Dakron</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Katalog Produk -->
+  <main class="container main-section">
+    <div class="section-heading">
+      <h2>Daftar Katalog Boneka Rajut</h2>
+      <p>Menampilkan seluruh koleksi boneka rajut lengkap dengan spesifikasi ukuran dan harga satuan.</p>
+    </div>
+
+    <div id="catalog-grid" class="catalog-grid"></div>
+  </main>
+
+  <!-- Informasi Bahan & Perawatan -->
+  <section class="info-section">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Standar Kualitas &amp; Perawatan</h2>
+        <p>Detail material yang kami gunakan agar boneka tetap lembut dan awet bertahun-tahun.</p>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>Material Benang Premium</h3>
+          <p>Menggunakan benang Milk Cotton (katun susu) 5 ply yang halus di kulit, tidak mudah berbulu, serta berwarna pastel natural.</p>
+        </div>
+        <div class="info-card">
+          <h3>Keamanan Mata Boneka</h3>
+          <p>Menggunakan safety eyes pengunci ganda dari bagian dalam atau sulaman benang khusus untuk varian bayi di bawah 3 tahun.</p>
+        </div>
+        <div class="info-card">
+          <h3>Cara Pencucian</h3>
+          <p>Cuci manual dengan air dingin dan sabun lembut. Cukup tekan perlahan tanpa diperas, lalu keringkan di tempat teduh.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong class="footer-brand">RajutManis Studio</strong>
+        <p>Jl. Melati Rajut No. 24, Bandung — Jam Operasional: Senin–Sabtu, 09.00–17.00 WIB</p>
+      </div>
+      <div class="footer-meta">
+        <p>Katalog Display Statis • <span id="current-year"></span></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Data Katalog Boneka Rajut (menggunakan gambar lokal di folder "boneka")
+    const catalogProducts = [
+      {
+        code: "RM-01",
+        name: "Kelinci Rajut Pastel",
+        category: "Klasik",
+        description: "Kelinci rajut lembut dengan telinga panjang menjuntai, cocok sebagai teman tidur anak.",
+        height: "25 cm",
+        material: "Katun Halus",
+        price: "Rp 110.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Crochet_bunny_doll_6060340e.jpg"
+      },
+      {
+        code: "RM-02",
+        name: "Gajah Mini & Gulungan Benang",
+        category: "Hewan Hutan",
+        description: "Boneka gajah rajut bertelinga lebar dengan detail belalai mungil yang menggemaskan.",
+        height: "20 cm",
+        material: "Milk Cotton 5 Ply",
+        price: "Rp 98.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Crochet_elephant_doll_with_yarn_5c5612bb.jpg"
+      },
+      {
+        code: "RM-03",
+        name: "Koala Peluk Hangat",
+        category: "Hewan Hutan",
+        description: "Koala abu-abu lembut dengan hidung oval hitam dan ekspresi tenang yang menenangkan.",
+        height: "21 cm",
+        material: "Milk Cotton 5 Ply",
+        price: "Rp 102.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Crochet_koala_bear_doll_5f4aaf18.jpg"
+      },
+      {
+        code: "RM-04",
+        name: "Monyet Ceria Ekor Panjang",
+        category: "Hewan Hutan",
+        description: "Boneka monyet rajut berwarna cokelat hangat dengan tangan dan ekor lentur.",
+        height: "23 cm",
+        material: "Soft Cotton",
+        price: "Rp 96.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Crochet_monkey_doll_924a2c98.jpg"
+      },
+      {
+        code: "RM-05",
+        name: "Domba Bulu Lembut",
+        category: "Peternakan",
+        description: "Amigurumi domba dengan teknik rajutan popcorn stitch yang menyerupai bulu wol empuk.",
+        height: "19 cm",
+        material: "Milk Cotton 5 Ply",
+        price: "Rp 105.000",
+        status: "Edisi Terbatas",
+        isLimited: true,
+        image: "boneka/Crochet_sheep_doll_832a4728.jpg"
+      },
+      {
+        code: "RM-06",
+        name: "Beruang Madu Klasik",
+        category: "Klasik",
+        description: "Boneka teddy bear rajut posisi duduk tegak dengan proporsi klasik dan jahitan rapi.",
+        height: "22 cm",
+        material: "Milk Cotton 5 Ply",
+        price: "Rp 95.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Crochet_teddy_bear_sitting_upright_6c835340.jpg"
+      },
+      {
+        code: "RM-07",
+        name: "Rusa Muda Bintik",
+        category: "Hewan Hutan",
+        description: "Boneka anak rusa cokelat keemasan lengkap dengan tanduk kecil dan bintik putih di punggung.",
+        height: "24 cm",
+        material: "Katun Susu",
+        price: "Rp 115.000",
+        status: "Edisi Terbatas",
+        isLimited: true,
+        image: "boneka/Knitted_crochet_deer_fawn_doll_4a6a162b.jpg"
+      },
+      {
+        code: "RM-08",
+        name: "Rubah Ekor Lebat",
+        category: "Hewan Hutan",
+        description: "Boneka rubah oranye terakota dengan perpaduan warna putih bersih di pipi dan ujung ekor.",
+        height: "21 cm",
+        material: "Milk Cotton 5 Ply",
+        price: "Rp 105.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Knitted_crochet_fox_doll_4f41f117.jpg"
+      },
+      {
+        code: "RM-09",
+        name: "Katak Hijau Ceria",
+        category: "Hewan Hutan",
+        description: "Katak rajut hijau sage dengan mata bulat menonjol dan senyum manis sulaman tangan.",
+        height: "18 cm",
+        material: "Milk Cotton 5 Ply",
+        price: "Rp 88.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Knitted_crochet_frog_doll_e0d9257b.jpg"
+      },
+      {
+        code: "RM-10",
+        name: "Jerapah Leher Jenjang",
+        category: "Safana",
+        description: "Jerapah rajut kuning krem dengan corak totol cokelat dan tanduk mungil di kepala.",
+        height: "28 cm",
+        material: "Katun Halus",
+        price: "Rp 118.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Knitted_crochet_giraffe_doll_4869c587.jpg"
+      },
+      {
+        code: "RM-11",
+        name: "Kucing Mungil Manis",
+        category: "Peliharaan",
+        description: "Kucing rajut mungil dengan telinga runcing dan kumis sulam tangan yang aman untuk anak.",
+        height: "17 cm",
+        material: "Katun Susu",
+        price: "Rp 78.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Knitted_crochet_kitten_doll_9c5fead8.jpg"
+      },
+      {
+        code: "RM-12",
+        name: "Singa Surai Tebal",
+        category: "Safana",
+        description: "Boneka singa pemberani dengan surai rajutan tebal yang empuk dan warna cokelat hangat.",
+        height: "22 cm",
+        material: "Milk Cotton 5 Ply",
+        price: "Rp 112.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Knitted_crochet_lion_doll_e43b84c2.jpg"
+      },
+      {
+        code: "RM-13",
+        name: "Burung Hantu Bijak",
+        category: "Hewan Hutan",
+        description: "Amigurumi burung hantu bulat dengan detail mata besar dan sayap rajut berlapis.",
+        height: "16 cm",
+        material: "Soft Cotton",
+        price: "Rp 82.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Knitted_crochet_owl_doll_a96a7644.jpg"
+      },
+      {
+        code: "RM-14",
+        name: "Penguin Musim Dingin",
+        category: "Kutub",
+        description: "Penguin rajut biru keabuan dengan perut putih oval yang lembut dan paruh oranye.",
+        height: "20 cm",
+        material: "Soft Cotton",
+        price: "Rp 89.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Knitted_crochet_penguin_doll_bc9f23cb.jpg"
+      },
+      {
+        code: "RM-15",
+        name: "Babi Pink Chubby",
+        category: "Peternakan",
+        description: "Boneka babi merah muda pastel bertubuh bulat dengan hidung kancing rajut yang lucu.",
+        height: "18 cm",
+        material: "Milk Cotton 5 Ply",
+        price: "Rp 85.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Knitted_crochet_pig_doll_e948d3bf.jpg"
+      },
+      {
+        code: "RM-16",
+        name: "Kungkang Santai",
+        category: "Hewan Hutan",
+        description: "Boneka sloth rajut dengan corak wajah khas dan lengan panjang yang bisa dipeluk.",
+        height: "23 cm",
+        material: "Katun Susu",
+        price: "Rp 108.000",
+        status: "Edisi Terbatas",
+        isLimited: true,
+        image: "boneka/Knitted_crochet_sloth_doll_e6777123.jpg"
+      },
+      {
+        code: "RM-17",
+        name: "Unicorn Tanduk Pelangi",
+        category: "Fantasi",
+        description: "Boneka unicorn putih bersih dengan surai warna-warni pastel dan tanduk emas berkilau.",
+        height: "26 cm",
+        material: "Milk Cotton 5 Ply",
+        price: "Rp 125.000",
+        status: "Edisi Terbatas",
+        isLimited: true,
+        image: "boneka/Knitted_crochet_unicorn_doll_8a86fdae.jpg"
+      },
+      {
+        code: "RM-18",
+        name: "Anak Anjing Setia",
+        category: "Peliharaan",
+        description: "Boneka anak anjing rajut dengan telinga terkulai lembut dan ekspresi ramah menggemaskan.",
+        height: "20 cm",
+        material: "Katun Halus",
+        price: "Rp 94.000",
+        status: "Tersedia",
+        isLimited: false,
+        image: "boneka/Knitted_puppy_dog_doll_973af225.jpg"
+      }
+    ];
+
+    function renderCatalog() {
+      const gridContainer = document.getElementById("catalog-grid");
+      if (!gridContainer) return;
+
+      const cardsHTML = catalogProducts
+        .map((item) => {
+          const stockClass = item.isLimited ? "stock-limited" : "stock-ready";
+
+          return `
+            <article class="product-card">
+              <div class="product-visual">
+                <span class="product-code">${item.code}</span>
+                <span class="product-category">${item.category}</span>
+                <img class="product-image" src="${item.image}" alt="${item.name}" loading="lazy">
+              </div>
+
+              <div class="product-body">
+                <h3 class="product-title">${item.name}</h3>
+                <p class="product-desc">${item.description}</p>
+
+                <div class="product-specs">
+                  <div class="spec-row">
+                    <span class="spec-label">Tinggi Boneka</span>
+                    <span class="spec-value">${item.height}</span>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Material</span>
+                    <span class="spec-value">${item.material}</span>
+                  </div>
+                </div>
+
+                <div class="product-footer">
+                  <span class="product-price">${item.price}</span>
+                  <span class="stock-label ${stockClass}">${item.status}</span>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+
+      gridContainer.innerHTML = cardsHTML;
+    }
+
+    function setFooterYear() {
+      const yearEl = document.getElementById("current-year");
+      if (yearEl) {
+        yearEl.textContent = new Date().getFullYear();
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      renderCatalog();
+      setFooterYear();
+    });
+  </script>
+</body>
+</html>
