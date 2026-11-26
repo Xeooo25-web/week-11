@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QRIS Approve Simulator — RajutManis</title>
+  <style>
+    :root {
+      --bg: #fdf8f4;
+      --surface: #ffffff;
+      --text: #3b2d26;
+      --muted: #7a665c;
+      --border: #eadbd0;
+      --green: #3f6a47;
+      --green-hover: #325539;
+      --red: #b5453a;
+      --red-bg: #fbeeed;
+      --green-bg: #eaf3ec;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px 16px 48px;
+    }
+
+    .wrap { max-width: 640px; margin: 0 auto; }
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .head h1 { font-size: 1.08rem; font-weight: 700; }
+    .head p { font-size: 0.82rem; color: var(--muted); }
+
+    .live-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--green);
+      background-color: var(--green-bg);
+      border: 1px solid #c5decb;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--green);
+      animation: blink 1.4s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .section-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 20px 0 10px;
+    }
+
+    .list { display: flex; flex-direction: column; gap: 10px; }
+
+    .tx-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .tx-id {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .tx-meta { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .tx-amount { font-size: 1rem; font-weight: 700; color: #c96f50; margin-top: 4px; }
+
+    .tx-actions { display: flex; gap: 8px; align-items: center; }
+
+    .btn {
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-approve { background-color: var(--green); color: #ffffff; }
+    .btn-approve:hover { background-color: var(--green-hover); }
+
+    .btn-reject { background-color: transparent; border-color: #e8c0bc; color: var(--red); }
+    .btn-reject:hover { background-color: var(--red-bg); }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .tag-paid { background-color: var(--green-bg); color: var(--green); border: 1px solid #c5decb; }
+    .tag-rejected { background-color: var(--red-bg); color: var(--red); border: 1px solid #e8c0bc; }
+
+    .empty {
+      background-color: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 24px 16px;
+      text-align: center;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .log { margin-top: 20px; font-size: 0.8rem; color: var(--muted); text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="head">
+      <div>
+        <h1>QRIS Payment Simulator</h1>
+        <p>Approve atau tolak transaksi QRIS RajutManis secara realtime</p>
+      </div>
+      <span class="live-pill"><span class="dot"></span> LIVE SYNC</span>
+    </header>
+
+    <div id="sim-root"></div>
+    <div id="sim-log" class="log"></div>
+  </div>
+
+  <script>
+    (function () {
+      const ORDERS_KEY = "rm_orders_v1";
+      const CHANNEL_NAME = "rajutmanis_sync";
+      const root = document.getElementById("sim-root");
+      const logEl = document.getElementById("sim-log");
+
+      let bc = null;
+      try {
+        if ("BroadcastChannel" in window) bc = new BroadcastChannel(CHANNEL_NAME);
+      } catch (e) {}
+
+      function getOrders() {
+        try {
+          const raw = localStorage.getItem(ORDERS_KEY);
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveOrders(orders) {
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+        if (bc) bc.postMessage({ type: "orders", ts: Date.now() });
+      }
+
+      function formatRupiah(n) {
+        return "Rp " + Number(n || 0).toLocaleString("id-ID");
+      }
+
+      function esc(s) {
+        return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+
+      function render() {
+        const orders = getOrders();
+        const pending = orders.filter(function (o) { return o.status === "PENDING"; });
+        const done = orders.filter(function (o) { return o.status !== "PENDING"; });
+
+        const pendingHtml = pending.length === 0
+          ? '<div class="empty">Tidak ada transaksi QRIS yang menunggu pembayaran saat ini.</div>'
+          : '<div class="list">' + pending.map(function (o) {
+              return (
+                '<div class="tx-card">' +
+                '  <div>' +
+                '    <div class="tx-id">' + esc(o.id) + ' &bull; ' + esc(o.qrisRef) + '</div>' +
+                '    <div class="tx-meta">' + esc(o.customer.nama) + ' (' + esc(o.customer.kota) + ')</div>' +
+                '    <div class="tx-amount">' + formatRupiah(o.grandTotal) + '</div>' +
+                '  </div>' +
+                '  <div class="tx-actions">' +
+                '    <button type="button" class="btn btn-approve" data-action="approve" data-id="' + esc(o.id) + '">Approve</button>' +
+                '    <button type="button" class="btn btn-reject" data-action="reject" data-id="' + esc(o.id) + '">Tolak</button>' +
+                '  </div>' +
+                '</div>'
+              );
+            }).join("") + '</div>';
+
+        const doneHtml = done.length === 0
+          ? ''
+          : '<div class="section-label">Riwayat Diproses</div><div class="list">' + done.slice(0, 8).map(function (o) {
+              const badge = o.status === "PAID"
+                ? '<span class="tag tag-paid">PAID</span>'
+                : '<span class="tag tag-rejected">DITOLAK</span>';
+              return (
+                '<div class="tx-card">' +
+                '  <div>' +
+                '    <div class="tx-id">' + esc(o.id) + '</div>' +
+                '    <div class="tx-meta">' + esc(o.customer.nama) + ' &bull; ' + formatRupiah(o.grandTotal) + '</div>' +
+                '  </div>' +
+                '  <div>' + badge + '</div>' +
+                '</div>'
+              );
+            }).join("") + '</div>';
+
+        root.innerHTML =
+          '<div class="section-label">Menunggu Verifikasi (' + pending.length + ')</div>' +
+          pendingHtml +
+          doneHtml;
+      }
+
+      root.addEventListener("click", function (e) {
+        const btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+
+        const action = btn.getAttribute("data-action");
+        const id = btn.getAttribute("data-id");
+        const orders = getOrders();
+        const target = orders.find(function (o) { return o.id === id; });
+        if (!target) return;
+
+        const nowIso = new Date().toISOString();
+        if (action === "approve") {
+          target.status = "PAID";
+          target.paidAt = nowIso;
+          target.approvalRef = "APR-" + Math.floor(100000 + Math.random() * 900000);
+          logEl.textContent = "Invoice " + id + " disetujui (PAID). Tab toko akan otomatis terupdate.";
+        } else if (action === "reject") {
+          target.status = "REJECTED";
+          target.rejectedAt = nowIso;
+          logEl.textContent = "Invoice " + id + " ditolak (REJECTED).";
+        }
+
+        saveOrders(orders);
+        render();
+      });
+
+      window.addEventListener("storage", function (e) {
+        if (e.key === ORDERS_KEY) render();
+      });
+      if (bc) {
+        bc.addEventListener("message", render);
+      }
+      setInterval(render, 1000);
+      render();
+    })();
+  </script>
+</body>
+</html>
